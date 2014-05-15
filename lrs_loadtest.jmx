@@ -32,26 +32,55 @@
               <stringProp name="Argument.name">basicAuthHash</stringProp>
               <stringProp name="Argument.value">ZmU5NmYwYjkyMjY0NThiNDI2YTJmMjNkZDQ0YTdlYmYyOTUzZjVmYjo2Mzk3NDkxZTZkMGE4MWU4OWZkZDI4NTg3YTA4MTNjMTg4ZTJhODA5</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">base64 hash of username:password</stringProp>
             </elementProp>
             <elementProp name="lrsServerUrl" elementType="Argument">
               <stringProp name="Argument.name">lrsServerUrl</stringProp>
               <stringProp name="Argument.value">localhost</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">URL of the LRS server</stringProp>
             </elementProp>
             <elementProp name="lrsServerPort" elementType="Argument">
               <stringProp name="Argument.name">lrsServerPort</stringProp>
               <stringProp name="Argument.value">8000</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">port of the LRS server</stringProp>
             </elementProp>
             <elementProp name="lrsBasePath" elementType="Argument">
               <stringProp name="Argument.name">lrsBasePath</stringProp>
               <stringProp name="Argument.value">/data/xAPI/</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">REST path</stringProp>
             </elementProp>
             <elementProp name="lrsStatementsPath" elementType="Argument">
               <stringProp name="Argument.name">lrsStatementsPath</stringProp>
               <stringProp name="Argument.value">statements</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">REST endpoint</stringProp>
+            </elementProp>
+            <elementProp name="statementMin" elementType="Argument">
+              <stringProp name="Argument.name">statementMin</stringProp>
+              <stringProp name="Argument.value">5</stringProp>
+              <stringProp name="Argument.desc">minimum statements to put per user</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="statementMax" elementType="Argument">
+              <stringProp name="Argument.name">statementMax</stringProp>
+              <stringProp name="Argument.value">20</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">maximum statements to put per user</stringProp>
+            </elementProp>
+            <elementProp name="queryMin" elementType="Argument">
+              <stringProp name="Argument.name">queryMin</stringProp>
+              <stringProp name="Argument.value">0</stringProp>
+              <stringProp name="Argument.desc">minimum times to query per statement put per user</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+            <elementProp name="queryMax" elementType="Argument">
+              <stringProp name="Argument.name">queryMax</stringProp>
+              <stringProp name="Argument.value">5</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+              <stringProp name="Argument.desc">maximum times to query per statement put per user</stringProp>
             </elementProp>
           </collectionProp>
         </Arguments>
@@ -101,13 +130,27 @@
         <hashTree/>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Controller" enabled="true"/>
         <hashTree>
-          <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Single Statement" enabled="true">
-            <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
-            <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
-              <collectionProp name="Arguments.arguments">
-                <elementProp name="" elementType="HTTPArgument">
-                  <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                  <stringProp name="Argument.value">{&#xd;
+          <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Statement Loop Number" enabled="true">
+            <stringProp name="maximumValue">${statementMax}</stringProp>
+            <stringProp name="minimumValue">${statementMin}</stringProp>
+            <stringProp name="outputFormat"></stringProp>
+            <boolProp name="perThread">false</boolProp>
+            <stringProp name="randomSeed"></stringProp>
+            <stringProp name="variableName">statementPostNum</stringProp>
+          </RandomVariableConfig>
+          <hashTree/>
+          <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Statement Post Loop Controller" enabled="true">
+            <boolProp name="LoopController.continue_forever">true</boolProp>
+            <stringProp name="LoopController.loops">${statementPostNum}</stringProp>
+          </LoopController>
+          <hashTree>
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Single Statement" enabled="true">
+              <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
+              <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
+                <collectionProp name="Arguments.arguments">
+                  <elementProp name="" elementType="HTTPArgument">
+                    <boolProp name="HTTPArgument.always_encode">false</boolProp>
+                    <stringProp name="Argument.value">{&#xd;
     &quot;actor&quot;: {&#xd;
         &quot;mbox&quot;: &quot;mailto:rlong@unicon.net&quot;,&#xd;
         &quot;name&quot;: &quot;Bobby Long&quot;,&#xd;
@@ -120,38 +163,89 @@
         }&#xd;
     },&#xd;
     &quot;object&quot;: {&#xd;
-        &quot;id&quot;: &quot;http://www.example.com/tincan/activities/TQqpnbBK&quot;,&#xd;
+        &quot;id&quot;: &quot;http://www.comic-con.org/&quot;,&#xd;
         &quot;objectType&quot;: &quot;Activity&quot;,&#xd;
         &quot;definition&quot;: {&#xd;
             &quot;name&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;ComiCon&quot;&#xd;
+                &quot;en-US&quot;: &quot;Comic-con&quot;&#xd;
             },&#xd;
             &quot;description&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;Nerd awesomeness&quot;&#xd;
+                &quot;en-US&quot;: &quot;Nerd awesomeness.&quot;&#xd;
             }&#xd;
         }&#xd;
     }&#xd;
 }</stringProp>
-                  <stringProp name="Argument.metadata">=</stringProp>
-                </elementProp>
-              </collectionProp>
-            </elementProp>
-            <stringProp name="HTTPSampler.domain"></stringProp>
-            <stringProp name="HTTPSampler.port"></stringProp>
-            <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-            <stringProp name="HTTPSampler.response_timeout"></stringProp>
-            <stringProp name="HTTPSampler.protocol"></stringProp>
-            <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-            <stringProp name="HTTPSampler.path"></stringProp>
-            <stringProp name="HTTPSampler.method">POST</stringProp>
-            <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-            <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-            <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-            <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-            <boolProp name="HTTPSampler.monitor">false</boolProp>
-            <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-          </HTTPSamplerProxy>
-          <hashTree/>
+                    <stringProp name="Argument.metadata">=</stringProp>
+                  </elementProp>
+                </collectionProp>
+              </elementProp>
+              <stringProp name="HTTPSampler.domain"></stringProp>
+              <stringProp name="HTTPSampler.port"></stringProp>
+              <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+              <stringProp name="HTTPSampler.response_timeout"></stringProp>
+              <stringProp name="HTTPSampler.protocol"></stringProp>
+              <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+              <stringProp name="HTTPSampler.path"></stringProp>
+              <stringProp name="HTTPSampler.method">POST</stringProp>
+              <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+              <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+              <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+              <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+              <boolProp name="HTTPSampler.monitor">false</boolProp>
+              <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+            </HTTPSamplerProxy>
+            <hashTree/>
+            <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Run Query Variable" enabled="true">
+              <stringProp name="variableName">runQuery</stringProp>
+              <stringProp name="outputFormat"></stringProp>
+              <stringProp name="minimumValue">0</stringProp>
+              <stringProp name="maximumValue">1</stringProp>
+              <stringProp name="randomSeed"></stringProp>
+              <boolProp name="perThread">true</boolProp>
+            </RandomVariableConfig>
+            <hashTree/>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Get Statements Controller" enabled="true">
+              <stringProp name="IfController.condition">${runQuery} == 1</stringProp>
+              <boolProp name="IfController.evaluateAll">false</boolProp>
+            </IfController>
+            <hashTree>
+              <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Query Loop Number" enabled="true">
+                <stringProp name="maximumValue">${queryMax}</stringProp>
+                <stringProp name="minimumValue">${queryMin}</stringProp>
+                <stringProp name="outputFormat"></stringProp>
+                <boolProp name="perThread">false</boolProp>
+                <stringProp name="randomSeed"></stringProp>
+                <stringProp name="variableName">queryNum</stringProp>
+              </RandomVariableConfig>
+              <hashTree/>
+              <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+                <boolProp name="LoopController.continue_forever">true</boolProp>
+                <stringProp name="LoopController.loops">${queryNum}</stringProp>
+              </LoopController>
+              <hashTree>
+                <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Statement Query" enabled="true">
+                  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                    <collectionProp name="Arguments.arguments"/>
+                  </elementProp>
+                  <stringProp name="HTTPSampler.domain"></stringProp>
+                  <stringProp name="HTTPSampler.port"></stringProp>
+                  <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                  <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                  <stringProp name="HTTPSampler.protocol"></stringProp>
+                  <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                  <stringProp name="HTTPSampler.path"></stringProp>
+                  <stringProp name="HTTPSampler.method">GET</stringProp>
+                  <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                  <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                  <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                  <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                  <boolProp name="HTTPSampler.monitor">false</boolProp>
+                  <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+                </HTTPSamplerProxy>
+                <hashTree/>
+              </hashTree>
+            </hashTree>
+          </hashTree>
         </hashTree>
         <ResultCollector guiclass="SummaryReport" testclass="ResultCollector" testname="Summary Report" enabled="true">
           <boolProp name="ResultCollector.error_logging">false</boolProp>
