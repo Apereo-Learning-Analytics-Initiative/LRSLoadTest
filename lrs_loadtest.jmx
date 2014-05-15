@@ -28,11 +28,17 @@
       <hashTree>
         <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
           <collectionProp name="Arguments.arguments">
-            <elementProp name="basicAuthHash" elementType="Argument">
-              <stringProp name="Argument.name">basicAuthHash</stringProp>
-              <stringProp name="Argument.value">ZmU5NmYwYjkyMjY0NThiNDI2YTJmMjNkZDQ0YTdlYmYyOTUzZjVmYjo2Mzk3NDkxZTZkMGE4MWU4OWZkZDI4NTg3YTA4MTNjMTg4ZTJhODA5</stringProp>
+            <elementProp name="username" elementType="Argument">
+              <stringProp name="Argument.name">username</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">LRS server username</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">base64 hash of username:password</stringProp>
+            </elementProp>
+            <elementProp name="password" elementType="Argument">
+              <stringProp name="Argument.name">password</stringProp>
+              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.desc">LRS password</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="lrsServerUrl" elementType="Argument">
               <stringProp name="Argument.name">lrsServerUrl</stringProp>
@@ -85,6 +91,20 @@
           </collectionProp>
         </Arguments>
         <hashTree/>
+        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="Authentication Hash Processor" enabled="true">
+          <boolProp name="resetInterpreter">false</boolProp>
+          <stringProp name="parameters">${username}:${password}</stringProp>
+          <stringProp name="filename"></stringProp>
+          <stringProp name="script">import java.security.MessageDigest;
+import org.apache.commons.codec.binary.Base64;
+
+byte[] encoded = Base64.encodeBase64(Parameters.getBytes(&quot;UTF-8&quot;));
+
+String encText = new String(encoded);
+
+vars.put(&quot;authHash&quot;, encText);</stringProp>
+        </BeanShellPreProcessor>
+        <hashTree/>
         <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
@@ -123,7 +143,7 @@
             </elementProp>
             <elementProp name="" elementType="Header">
               <stringProp name="Header.name">Authorization</stringProp>
-              <stringProp name="Header.value">Basic ${basicAuthHash}</stringProp>
+              <stringProp name="Header.value">Basic ${authHash}</stringProp>
             </elementProp>
           </collectionProp>
         </HeaderManager>
