@@ -15,9 +15,9 @@
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
-          <stringProp name="LoopController.loops">1</stringProp>
+          <stringProp name="LoopController.loops">2</stringProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">4</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <longProp name="ThreadGroup.start_time">1381435017000</longProp>
         <longProp name="ThreadGroup.end_time">1381435017000</longProp>
@@ -30,13 +30,13 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="username" elementType="Argument">
               <stringProp name="Argument.name">username</stringProp>
-              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.value">fe96f0b9226458b426a2f23dd44a7ebf2953f5fb</stringProp>
               <stringProp name="Argument.desc">LRS server username</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="password" elementType="Argument">
               <stringProp name="Argument.name">password</stringProp>
-              <stringProp name="Argument.value"></stringProp>
+              <stringProp name="Argument.value">6397491e6d0a81e89fdd28587a0813c188e2a809</stringProp>
               <stringProp name="Argument.desc">LRS password</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
@@ -72,7 +72,7 @@
             </elementProp>
             <elementProp name="statementMax" elementType="Argument">
               <stringProp name="Argument.name">statementMax</stringProp>
-              <stringProp name="Argument.value">20</stringProp>
+              <stringProp name="Argument.value">10</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">maximum statements to put per user</stringProp>
             </elementProp>
@@ -87,6 +87,12 @@
               <stringProp name="Argument.value">5</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">maximum times to query per statement put per user</stringProp>
+            </elementProp>
+            <elementProp name="testDataDir" elementType="Argument">
+              <stringProp name="Argument.name">testDataDir</stringProp>
+              <stringProp name="Argument.value">/opt/git/LRSLoadTest/data/</stringProp>
+              <stringProp name="Argument.desc">location of the test data (with trailing slash)</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
           </collectionProp>
         </Arguments>
@@ -147,6 +153,50 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
           </collectionProp>
         </HeaderManager>
         <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Actors" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">${testDataDir}/actors.txt</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">NAME,EMAIL</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Contexts" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">${testDataDir}/contexts.txt</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">CONTEXT,GUID</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Objects" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">${testDataDir}/objects.txt</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">OBJECT</stringProp>
+        </CSVDataSet>
+        <hashTree/>
+        <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Verbs" enabled="true">
+          <stringProp name="delimiter">,</stringProp>
+          <stringProp name="fileEncoding"></stringProp>
+          <stringProp name="filename">${testDataDir}/verbs.txt</stringProp>
+          <boolProp name="quotedData">false</boolProp>
+          <boolProp name="recycle">true</boolProp>
+          <stringProp name="shareMode">shareMode.all</stringProp>
+          <boolProp name="stopThread">false</boolProp>
+          <stringProp name="variableNames">VERB</stringProp>
+        </CSVDataSet>
+        <hashTree/>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Controller" enabled="true"/>
         <hashTree>
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Statement Loop Number" enabled="true">
@@ -171,27 +221,35 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
                     <boolProp name="HTTPArgument.always_encode">false</boolProp>
                     <stringProp name="Argument.value">{&#xd;
     &quot;actor&quot;: {&#xd;
-        &quot;mbox&quot;: &quot;mailto:rlong@unicon.net&quot;,&#xd;
-        &quot;name&quot;: &quot;Bobby Long&quot;,&#xd;
+        &quot;mbox&quot;: &quot;mailto:${EMAIL}&quot;,&#xd;
+        &quot;name&quot;: &quot;${NAME}&quot;,&#xd;
         &quot;objectType&quot;: &quot;Agent&quot;&#xd;
     },&#xd;
     &quot;verb&quot;: {&#xd;
-        &quot;id&quot;: &quot;http://adlnet.gov/expapi/verbs/attended&quot;,&#xd;
+        &quot;id&quot;: &quot;http://adlnet.gov/expapi/verbs/${VERB}&quot;,&#xd;
         &quot;display&quot;: {&#xd;
-            &quot;en-US&quot;: &quot;attended&quot;&#xd;
+            &quot;en-US&quot;: &quot;${VERB}&quot;&#xd;
         }&#xd;
     },&#xd;
     &quot;object&quot;: {&#xd;
-        &quot;id&quot;: &quot;http://www.comic-con.org/&quot;,&#xd;
+        &quot;id&quot;: &quot;http://adlnet.gov/${OBJECT}&quot;,&#xd;
         &quot;objectType&quot;: &quot;Activity&quot;,&#xd;
         &quot;definition&quot;: {&#xd;
-            &quot;name&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;Comic-con&quot;&#xd;
-            },&#xd;
-            &quot;description&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;Nerd awesomeness.&quot;&#xd;
-            }&#xd;
+        	   &quot;name&quot;: {&#xd;
+        	   	   &quot;en-US&quot;: &quot;${OBJECT}&quot;&#xd;
+        	   },&#xd;
+        	   &quot;description&quot;: {&#xd;
+        	   	   &quot;en-US&quot;: &quot;${OBJECT}&quot;&#xd;
+        	   }&#xd;
         }&#xd;
+    },&#xd;
+    &quot;context&quot;: {&#xd;
+    	   &quot;contextActivities&quot;: {&#xd;
+    	   	   &quot;grouping&quot;: {&#xd;
+    	   	   	   &quot;id&quot;: &quot;http://adlnet.gov/${CONTEXT}&quot;&#xd;
+    	   	   }&#xd;
+    	   },&#xd;
+    	   &quot;registration&quot;: &quot;${GUID}&quot;&#xd;
     }&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
