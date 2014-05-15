@@ -95,14 +95,13 @@
           <boolProp name="resetInterpreter">false</boolProp>
           <stringProp name="parameters">${username}:${password}</stringProp>
           <stringProp name="filename"></stringProp>
-          <stringProp name="script">import java.security.MessageDigest;
-import org.apache.commons.codec.binary.Base64;
+          <stringProp name="script">import org.apache.commons.codec.binary.Base64;
 
 byte[] encoded = Base64.encodeBase64(Parameters.getBytes(&quot;UTF-8&quot;));
 
-String encText = new String(encoded);
+String authHash = new String(encoded);
 
-vars.put(&quot;authHash&quot;, encText);</stringProp>
+vars.put(&quot;authHash&quot;, authHash);</stringProp>
         </BeanShellPreProcessor>
         <hashTree/>
         <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
