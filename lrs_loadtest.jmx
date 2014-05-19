@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
+<jmeterTestPlan version="1.2" properties="2.4" jmeter="2.9 r1437961">
   <hashTree>
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
@@ -30,27 +30,27 @@
           <collectionProp name="Arguments.arguments">
             <elementProp name="username" elementType="Argument">
               <stringProp name="Argument.name">username</stringProp>
-              <stringProp name="Argument.value">fe96f0b9226458b426a2f23dd44a7ebf2953f5fb</stringProp>
+              <stringProp name="Argument.value">018dd0a6b0581dd9b7133e095c8618b6b642d128</stringProp>
               <stringProp name="Argument.desc">LRS server username</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="password" elementType="Argument">
               <stringProp name="Argument.name">password</stringProp>
-              <stringProp name="Argument.value">6397491e6d0a81e89fdd28587a0813c188e2a809</stringProp>
+              <stringProp name="Argument.value">d6e28fc2bd2c9949a35b47363dc62051fcf981fb</stringProp>
               <stringProp name="Argument.desc">LRS password</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="lrsServerUrl" elementType="Argument">
               <stringProp name="Argument.name">lrsServerUrl</stringProp>
-              <stringProp name="Argument.value">localhost</stringProp>
+              <stringProp name="Argument.value">learninglocker</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">URL of the LRS server</stringProp>
+              <stringProp name="Argument.desc">Hostname of the LRS server (without http://)</stringProp>
             </elementProp>
             <elementProp name="lrsServerPort" elementType="Argument">
               <stringProp name="Argument.name">lrsServerPort</stringProp>
-              <stringProp name="Argument.value">8000</stringProp>
+              <stringProp name="Argument.value"></stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">port of the LRS server</stringProp>
+              <stringProp name="Argument.desc">port of the LRS server (if not port 80)</stringProp>
             </elementProp>
             <elementProp name="lrsBasePath" elementType="Argument">
               <stringProp name="Argument.name">lrsBasePath</stringProp>
@@ -66,31 +66,25 @@
             </elementProp>
             <elementProp name="statementMin" elementType="Argument">
               <stringProp name="Argument.name">statementMin</stringProp>
-              <stringProp name="Argument.value">5</stringProp>
+              <stringProp name="Argument.value">50</stringProp>
               <stringProp name="Argument.desc">minimum statements to put per user</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
             <elementProp name="statementMax" elementType="Argument">
               <stringProp name="Argument.name">statementMax</stringProp>
-              <stringProp name="Argument.value">10</stringProp>
+              <stringProp name="Argument.value">250</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
               <stringProp name="Argument.desc">maximum statements to put per user</stringProp>
             </elementProp>
-            <elementProp name="queryMin" elementType="Argument">
-              <stringProp name="Argument.name">queryMin</stringProp>
-              <stringProp name="Argument.value">0</stringProp>
-              <stringProp name="Argument.desc">minimum times to query per statement put per user</stringProp>
+            <elementProp name="queryMaxRand" elementType="Argument">
+              <stringProp name="Argument.name">queryMaxRand</stringProp>
+              <stringProp name="Argument.value">100</stringProp>
+              <stringProp name="Argument.desc">will run a query 1 out of {queryMaxRand} times for each statement posted</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="queryMax" elementType="Argument">
-              <stringProp name="Argument.name">queryMax</stringProp>
-              <stringProp name="Argument.value">5</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">maximum times to query per statement put per user</stringProp>
             </elementProp>
             <elementProp name="testDataDir" elementType="Argument">
               <stringProp name="Argument.name">testDataDir</stringProp>
-              <stringProp name="Argument.value">/opt/git/LRSLoadTest/data/</stringProp>
+              <stringProp name="Argument.value">/opt/unicon/usu/LRSLoadTest/data</stringProp>
               <stringProp name="Argument.desc">location of the test data (with trailing slash)</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
@@ -232,7 +226,7 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
         }&#xd;
     },&#xd;
     &quot;object&quot;: {&#xd;
-        &quot;id&quot;: &quot;http://adlnet.gov/${OBJECT}&quot;,&#xd;
+        &quot;id&quot;: &quot;http://adlnet.gov/expapi/activities/${OBJECT}&quot;,&#xd;
         &quot;objectType&quot;: &quot;Activity&quot;,&#xd;
         &quot;definition&quot;: {&#xd;
         	   &quot;name&quot;: {&#xd;
@@ -271,12 +265,17 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
               <boolProp name="HTTPSampler.monitor">false</boolProp>
               <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
             </HTTPSamplerProxy>
-            <hashTree/>
+            <hashTree>
+              <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="Result Status Action Handler" enabled="true">
+                <intProp name="OnError.action">3</intProp>
+              </ResultAction>
+              <hashTree/>
+            </hashTree>
             <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Run Query Variable" enabled="true">
               <stringProp name="variableName">runQuery</stringProp>
               <stringProp name="outputFormat"></stringProp>
-              <stringProp name="minimumValue">0</stringProp>
-              <stringProp name="maximumValue">1</stringProp>
+              <stringProp name="minimumValue">1</stringProp>
+              <stringProp name="maximumValue">${queryMaxRand}</stringProp>
               <stringProp name="randomSeed"></stringProp>
               <boolProp name="perThread">true</boolProp>
             </RandomVariableConfig>
@@ -286,39 +285,29 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
             </IfController>
             <hashTree>
-              <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Query Loop Number" enabled="true">
-                <stringProp name="maximumValue">${queryMax}</stringProp>
-                <stringProp name="minimumValue">${queryMin}</stringProp>
-                <stringProp name="outputFormat"></stringProp>
-                <boolProp name="perThread">false</boolProp>
-                <stringProp name="randomSeed"></stringProp>
-                <stringProp name="variableName">queryNum</stringProp>
-              </RandomVariableConfig>
-              <hashTree/>
-              <LoopController guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
-                <boolProp name="LoopController.continue_forever">true</boolProp>
-                <stringProp name="LoopController.loops">${queryNum}</stringProp>
-              </LoopController>
+              <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Statement Query" enabled="true">
+                <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+                  <collectionProp name="Arguments.arguments"/>
+                </elementProp>
+                <stringProp name="HTTPSampler.domain"></stringProp>
+                <stringProp name="HTTPSampler.port"></stringProp>
+                <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+                <stringProp name="HTTPSampler.response_timeout"></stringProp>
+                <stringProp name="HTTPSampler.protocol"></stringProp>
+                <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+                <stringProp name="HTTPSampler.path"></stringProp>
+                <stringProp name="HTTPSampler.method">GET</stringProp>
+                <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+                <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+                <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+                <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+                <boolProp name="HTTPSampler.monitor">false</boolProp>
+                <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+              </HTTPSamplerProxy>
               <hashTree>
-                <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Statement Query" enabled="true">
-                  <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-                    <collectionProp name="Arguments.arguments"/>
-                  </elementProp>
-                  <stringProp name="HTTPSampler.domain"></stringProp>
-                  <stringProp name="HTTPSampler.port"></stringProp>
-                  <stringProp name="HTTPSampler.connect_timeout"></stringProp>
-                  <stringProp name="HTTPSampler.response_timeout"></stringProp>
-                  <stringProp name="HTTPSampler.protocol"></stringProp>
-                  <stringProp name="HTTPSampler.contentEncoding"></stringProp>
-                  <stringProp name="HTTPSampler.path"></stringProp>
-                  <stringProp name="HTTPSampler.method">GET</stringProp>
-                  <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
-                  <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
-                  <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
-                  <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
-                  <boolProp name="HTTPSampler.monitor">false</boolProp>
-                  <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
-                </HTTPSamplerProxy>
+                <ResultAction guiclass="ResultActionGui" testclass="ResultAction" testname="Result Status Action Handler" enabled="true">
+                  <intProp name="OnError.action">3</intProp>
+                </ResultAction>
                 <hashTree/>
               </hashTree>
             </hashTree>
