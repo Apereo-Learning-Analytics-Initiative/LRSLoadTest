@@ -84,8 +84,8 @@
             </elementProp>
             <elementProp name="testDataDir" elementType="Argument">
               <stringProp name="Argument.name">testDataDir</stringProp>
-              <stringProp name="Argument.value">/opt/unicon/usu/LRSLoadTest/data</stringProp>
-              <stringProp name="Argument.desc">location of the test data (with trailing slash)</stringProp>
+              <stringProp name="Argument.value">/opt/LRSLoadTestData/</stringProp>
+              <stringProp name="Argument.desc">location of the test data (with trailing slash, recommend symlink to the code location)</stringProp>
               <stringProp name="Argument.metadata">=</stringProp>
             </elementProp>
           </collectionProp>
