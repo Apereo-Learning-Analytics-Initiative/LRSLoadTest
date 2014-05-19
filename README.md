@@ -34,25 +34,25 @@ Within the data directory, there are several files that hold test data for posti
 
 - actors.txt:
 	Holds test users (actors)
-	columns:
-		name: the users name
-		email: the user's email
+	- columns:
+		- name: the users name
+		- email: the user's email
 
 - contexts:
 	Holds test contexts
-	columns:
-		context: the action context
-		guid: the id of the action context
+	- columns:
+		- context: the action context
+		- guid: the id of the action context
 
 - objects:
 	Holds test objects
-	columns:
-		object: object on which an action is performed
+	- columns:
+		- object: object on which an action is performed
 
 - verbs:
 	Holds test verbs
-	columns:
-		verb: the action to perform on an object in a context
+	- columns:
+		- verb: the action to perform on an object in a context
 
 Contacts
 --------
