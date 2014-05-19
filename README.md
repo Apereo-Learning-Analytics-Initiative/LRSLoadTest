@@ -57,5 +57,5 @@ Within the data directory, there are several files that hold test data for posti
 Contacts
 --------
 Post issues in the issue tracker or send questions to:
-Aaron Zeckoski (azeckoski @ unicon.net) (azeckoski @ vt.edu)
-Robert Long (rlong @ unicon.net)
+- Aaron Zeckoski (azeckoski @ unicon.net) (azeckoski @ vt.edu)
+- Robert Long (rlong @ unicon.net)
