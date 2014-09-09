@@ -63,8 +63,8 @@
           </elementProp>
           <elementProp name="testDataDir" elementType="Argument">
             <stringProp name="Argument.name">testDataDir</stringProp>
-            <stringProp name="Argument.value">/opt/git/unicon/LRSLoadTest/data/</stringProp>
-            <stringProp name="Argument.desc">location of the test data (with trailing slash, recommend symlink to the code location)</stringProp>
+            <stringProp name="Argument.value">${__BeanShell(import org.apache.jmeter.services.FileServer; FileServer.getFileServer().getBaseDir();)}${__BeanShell(File.separator,)}data${__BeanShell(File.separator,)}</stringProp>
+            <stringProp name="Argument.desc">location of the test data (with trailing slash), defaults to the data directory in this .jmx file&apos;s directory</stringProp>
             <stringProp name="Argument.metadata">=</stringProp>
           </elementProp>
           <elementProp name="xAPIVersion" elementType="Argument">
