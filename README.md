@@ -6,7 +6,6 @@ Learning Record Store (LRS) load testing scripts and notes
 Goals
 -----
 Create a series of reusable scripts (jmeter, etc.) which can be used to load test an LRS and roughly benchmark its ability to handle large numbers of incoming statements.
-It is NOT our goal to test the ability of an LRS to handle incoming statements along with other processing (for UIs or data retrieval for example). This is all about data storage.
 
 Usage
 -----
@@ -18,7 +17,8 @@ Usage
 	- lrsServerUrl: the hostname for the LRS
 	- lrsServerPort: the port on the LRS server
 	- lrsBasePath: the REST path on the LRS server
-	- lrsStatementsPath: the REST endpoint (added to the base path)
+	- lrsStatementsPath: the REST endpoint for POSTing and GETting statements} (added to the base path)
+	- lrsAboutPath: the REST endpoint for GETting the xAPI version (added to the base path)
 	- testDataDir: the directory to the CSV data files (on your local machine)
 
 	This test will post random amounts of statements, and optionally randomly perform a get, depending on the following settings:

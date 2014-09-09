@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <jmeterTestPlan version="1.2" properties="2.6" jmeter="2.11 r1554548">
   <hashTree>
-    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="LRS Test" enabled="true">
       <stringProp name="TestPlan.comments"></stringProp>
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
@@ -11,7 +11,228 @@
       <stringProp name="TestPlan.user_define_classpath"></stringProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+      <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments">
+          <elementProp name="username" elementType="Argument">
+            <stringProp name="Argument.name">username</stringProp>
+            <stringProp name="Argument.value">openlrs</stringProp>
+            <stringProp name="Argument.desc">LRS server username</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="password" elementType="Argument">
+            <stringProp name="Argument.name">password</stringProp>
+            <stringProp name="Argument.value">openlrs</stringProp>
+            <stringProp name="Argument.desc">LRS password</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="lrsServerUrl" elementType="Argument">
+            <stringProp name="Argument.name">lrsServerUrl</stringProp>
+            <stringProp name="Argument.value">localhost</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">Hostname of the LRS server (without http://)</stringProp>
+          </elementProp>
+          <elementProp name="lrsServerPort" elementType="Argument">
+            <stringProp name="Argument.name">lrsServerPort</stringProp>
+            <stringProp name="Argument.value">8080</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">port of the LRS server (if not port 80)</stringProp>
+          </elementProp>
+          <elementProp name="lrsBasePath" elementType="Argument">
+            <stringProp name="Argument.name">lrsBasePath</stringProp>
+            <stringProp name="Argument.value">/xAPI/</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">REST path</stringProp>
+          </elementProp>
+          <elementProp name="statementMin" elementType="Argument">
+            <stringProp name="Argument.name">statementMin</stringProp>
+            <stringProp name="Argument.value">50</stringProp>
+            <stringProp name="Argument.desc">minimum statements to POST per user</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="statementMax" elementType="Argument">
+            <stringProp name="Argument.name">statementMax</stringProp>
+            <stringProp name="Argument.value">250</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+            <stringProp name="Argument.desc">maximum statements to POST per user</stringProp>
+          </elementProp>
+          <elementProp name="getStatementMaxRand" elementType="Argument">
+            <stringProp name="Argument.name">getStatementMaxRand</stringProp>
+            <stringProp name="Argument.value">100</stringProp>
+            <stringProp name="Argument.desc">will run a GET statement query 1 out of {getStatementMaxRand} times for each statement posted</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="testDataDir" elementType="Argument">
+            <stringProp name="Argument.name">testDataDir</stringProp>
+            <stringProp name="Argument.value">/opt/git/unicon/LRSLoadTest/data/</stringProp>
+            <stringProp name="Argument.desc">location of the test data (with trailing slash, recommend symlink to the code location)</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+          <elementProp name="xAPIVersion" elementType="Argument">
+            <stringProp name="Argument.name">xAPIVersion</stringProp>
+            <stringProp name="Argument.value">1.0.1</stringProp>
+            <stringProp name="Argument.metadata">=</stringProp>
+          </elementProp>
+        </collectionProp>
+      </Arguments>
+      <hashTree/>
+      <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="Authentication Hash Processor" enabled="true">
+        <boolProp name="resetInterpreter">false</boolProp>
+        <stringProp name="parameters">${username}:${password}</stringProp>
+        <stringProp name="filename"></stringProp>
+        <stringProp name="script">import org.apache.commons.codec.binary.Base64;
+
+byte[] encoded = Base64.encodeBase64(Parameters.getBytes(&quot;UTF-8&quot;));
+
+String authHash = new String(encoded);
+
+vars.put(&quot;authHash&quot;, authHash);</stringProp>
+      </BeanShellPreProcessor>
+      <hashTree/>
+      <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
+        <collectionProp name="HeaderManager.headers">
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept</stringProp>
+            <stringProp name="Header.value">application/json</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Accept-Language</stringProp>
+            <stringProp name="Header.value">en-US,en</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Pragma</stringProp>
+            <stringProp name="Header.value">no-cache</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Cache-Control</stringProp>
+            <stringProp name="Header.value">no-cache</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">X-Experience-API-Version</stringProp>
+            <stringProp name="Header.value">${xAPIVersion}</stringProp>
+          </elementProp>
+          <elementProp name="" elementType="Header">
+            <stringProp name="Header.name">Authorization</stringProp>
+            <stringProp name="Header.value">Basic ${authHash}</stringProp>
+          </elementProp>
+        </collectionProp>
+      </HeaderManager>
+      <hashTree/>
+      <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+        <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments"/>
+        </elementProp>
+        <stringProp name="HTTPSampler.domain">${lrsServerUrl}</stringProp>
+        <stringProp name="HTTPSampler.port">${lrsServerPort}</stringProp>
+        <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+        <stringProp name="HTTPSampler.response_timeout"></stringProp>
+        <stringProp name="HTTPSampler.protocol"></stringProp>
+        <stringProp name="HTTPSampler.contentEncoding">UTF-8</stringProp>
+        <stringProp name="HTTPSampler.path"></stringProp>
+        <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
+      </ConfigTestElement>
+      <hashTree/>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="About" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <longProp name="ThreadGroup.start_time">1410274743000</longProp>
+        <longProp name="ThreadGroup.end_time">1410274743000</longProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+          <collectionProp name="Arguments.arguments">
+            <elementProp name="lrsAboutPath" elementType="Argument">
+              <stringProp name="Argument.name">lrsAboutPath</stringProp>
+              <stringProp name="Argument.value">about</stringProp>
+              <stringProp name="Argument.metadata">=</stringProp>
+            </elementProp>
+          </collectionProp>
+        </Arguments>
+        <hashTree/>
+        <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path">${lrsBasePath}${lrsAboutPath}</stringProp>
+          <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
+        </ConfigTestElement>
+        <hashTree/>
+        <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="HTTP Request" enabled="true">
+          <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
+          <stringProp name="HTTPSampler.connect_timeout"></stringProp>
+          <stringProp name="HTTPSampler.response_timeout"></stringProp>
+          <stringProp name="HTTPSampler.protocol"></stringProp>
+          <stringProp name="HTTPSampler.contentEncoding"></stringProp>
+          <stringProp name="HTTPSampler.path"></stringProp>
+          <stringProp name="HTTPSampler.method">GET</stringProp>
+          <boolProp name="HTTPSampler.follow_redirects">true</boolProp>
+          <boolProp name="HTTPSampler.auto_redirects">false</boolProp>
+          <boolProp name="HTTPSampler.use_keepalive">true</boolProp>
+          <boolProp name="HTTPSampler.DO_MULTIPART_POST">false</boolProp>
+          <boolProp name="HTTPSampler.monitor">false</boolProp>
+          <stringProp name="HTTPSampler.embedded_url_re"></stringProp>
+        </HTTPSamplerProxy>
+        <hashTree>
+          <BSFPostProcessor guiclass="TestBeanGUI" testclass="BSFPostProcessor" testname="Set xAPI Version" enabled="true">
+            <stringProp name="filename"></stringProp>
+            <stringProp name="parameters"></stringProp>
+            <stringProp name="script">eval(&apos;var jsonResponse = &apos; + prev.getResponseDataAsString());
+vars.put(&quot;xAPIVersion&quot;, jsonResponse.version);</stringProp>
+            <stringProp name="scriptLanguage">javascript</stringProp>
+          </BSFPostProcessor>
+          <hashTree/>
+          <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+            <boolProp name="ResultCollector.error_logging">false</boolProp>
+            <objProp>
+              <name>saveConfig</name>
+              <value class="SampleSaveConfiguration">
+                <time>true</time>
+                <latency>true</latency>
+                <timestamp>true</timestamp>
+                <success>true</success>
+                <label>true</label>
+                <code>true</code>
+                <message>true</message>
+                <threadName>true</threadName>
+                <dataType>true</dataType>
+                <encoding>false</encoding>
+                <assertions>true</assertions>
+                <subresults>true</subresults>
+                <responseData>false</responseData>
+                <samplerData>false</samplerData>
+                <xml>false</xml>
+                <fieldNames>false</fieldNames>
+                <responseHeaders>false</responseHeaders>
+                <requestHeaders>false</requestHeaders>
+                <responseDataOnError>false</responseDataOnError>
+                <saveAssertionResultsFailureMessage>false</saveAssertionResultsFailureMessage>
+                <assertionsResultsToSave>0</assertionsResultsToSave>
+                <bytes>true</bytes>
+              </value>
+            </objProp>
+            <stringProp name="filename"></stringProp>
+          </ResultCollector>
+          <hashTree/>
+        </hashTree>
+      </hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Statements" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
           <boolProp name="LoopController.continue_forever">false</boolProp>
@@ -26,90 +247,12 @@
         <stringProp name="ThreadGroup.delay"></stringProp>
       </ThreadGroup>
       <hashTree>
-        <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
-          <collectionProp name="Arguments.arguments">
-            <elementProp name="username" elementType="Argument">
-              <stringProp name="Argument.name">username</stringProp>
-              <stringProp name="Argument.value">018dd0a6b0581dd9b7133e095c8618b6b642d128</stringProp>
-              <stringProp name="Argument.desc">LRS server username</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="password" elementType="Argument">
-              <stringProp name="Argument.name">password</stringProp>
-              <stringProp name="Argument.value">d6e28fc2bd2c9949a35b47363dc62051fcf981fb</stringProp>
-              <stringProp name="Argument.desc">LRS password</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="lrsServerUrl" elementType="Argument">
-              <stringProp name="Argument.name">lrsServerUrl</stringProp>
-              <stringProp name="Argument.value">learninglocker</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">Hostname of the LRS server (without http://)</stringProp>
-            </elementProp>
-            <elementProp name="lrsServerPort" elementType="Argument">
-              <stringProp name="Argument.name">lrsServerPort</stringProp>
-              <stringProp name="Argument.value"></stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">port of the LRS server (if not port 80)</stringProp>
-            </elementProp>
-            <elementProp name="lrsBasePath" elementType="Argument">
-              <stringProp name="Argument.name">lrsBasePath</stringProp>
-              <stringProp name="Argument.value">/data/xAPI/</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">REST path</stringProp>
-            </elementProp>
-            <elementProp name="lrsStatementsPath" elementType="Argument">
-              <stringProp name="Argument.name">lrsStatementsPath</stringProp>
-              <stringProp name="Argument.value">statements</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">REST endpoint</stringProp>
-            </elementProp>
-            <elementProp name="statementMin" elementType="Argument">
-              <stringProp name="Argument.name">statementMin</stringProp>
-              <stringProp name="Argument.value">50</stringProp>
-              <stringProp name="Argument.desc">minimum statements to put per user</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="statementMax" elementType="Argument">
-              <stringProp name="Argument.name">statementMax</stringProp>
-              <stringProp name="Argument.value">250</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-              <stringProp name="Argument.desc">maximum statements to put per user</stringProp>
-            </elementProp>
-            <elementProp name="queryMaxRand" elementType="Argument">
-              <stringProp name="Argument.name">queryMaxRand</stringProp>
-              <stringProp name="Argument.value">100</stringProp>
-              <stringProp name="Argument.desc">will run a query 1 out of {queryMaxRand} times for each statement posted</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-            <elementProp name="testDataDir" elementType="Argument">
-              <stringProp name="Argument.name">testDataDir</stringProp>
-              <stringProp name="Argument.value">/opt/LRSLoadTestData/</stringProp>
-              <stringProp name="Argument.desc">location of the test data (with trailing slash, recommend symlink to the code location)</stringProp>
-              <stringProp name="Argument.metadata">=</stringProp>
-            </elementProp>
-          </collectionProp>
-        </Arguments>
-        <hashTree/>
-        <BeanShellPreProcessor guiclass="TestBeanGUI" testclass="BeanShellPreProcessor" testname="Authentication Hash Processor" enabled="true">
-          <boolProp name="resetInterpreter">false</boolProp>
-          <stringProp name="parameters">${username}:${password}</stringProp>
-          <stringProp name="filename"></stringProp>
-          <stringProp name="script">import org.apache.commons.codec.binary.Base64;
-
-byte[] encoded = Base64.encodeBase64(Parameters.getBytes(&quot;UTF-8&quot;));
-
-String authHash = new String(encoded);
-
-vars.put(&quot;authHash&quot;, authHash);</stringProp>
-        </BeanShellPreProcessor>
-        <hashTree/>
         <ConfigTestElement guiclass="HttpDefaultsGui" testclass="ConfigTestElement" testname="HTTP Request Defaults" enabled="true">
           <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
-          <stringProp name="HTTPSampler.domain">${lrsServerUrl}</stringProp>
-          <stringProp name="HTTPSampler.port">${lrsServerPort}</stringProp>
+          <stringProp name="HTTPSampler.domain"></stringProp>
+          <stringProp name="HTTPSampler.port"></stringProp>
           <stringProp name="HTTPSampler.connect_timeout"></stringProp>
           <stringProp name="HTTPSampler.response_timeout"></stringProp>
           <stringProp name="HTTPSampler.protocol"></stringProp>
@@ -117,35 +260,6 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
           <stringProp name="HTTPSampler.path">${lrsBasePath}${lrsStatementsPath}</stringProp>
           <stringProp name="HTTPSampler.concurrentPool">4</stringProp>
         </ConfigTestElement>
-        <hashTree/>
-        <HeaderManager guiclass="HeaderPanel" testclass="HeaderManager" testname="HTTP Header Manager" enabled="true">
-          <collectionProp name="HeaderManager.headers">
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Accept</stringProp>
-              <stringProp name="Header.value">application/json</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Accept-Language</stringProp>
-              <stringProp name="Header.value">en-US,en</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Pragma</stringProp>
-              <stringProp name="Header.value">no-cache</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Cache-Control</stringProp>
-              <stringProp name="Header.value">no-cache</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">X-Experience-API-Version</stringProp>
-              <stringProp name="Header.value">1.0.1</stringProp>
-            </elementProp>
-            <elementProp name="" elementType="Header">
-              <stringProp name="Header.name">Authorization</stringProp>
-              <stringProp name="Header.value">Basic ${authHash}</stringProp>
-            </elementProp>
-          </collectionProp>
-        </HeaderManager>
         <hashTree/>
         <CSVDataSet guiclass="TestBeanGUI" testclass="CSVDataSet" testname="Actors" enabled="true">
           <stringProp name="delimiter">,</stringProp>
@@ -193,11 +307,21 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
         <hashTree/>
         <RecordingController guiclass="RecordController" testclass="RecordingController" testname="Controller" enabled="true"/>
         <hashTree>
+          <Arguments guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments">
+              <elementProp name="lrsStatementsPath" elementType="Argument">
+                <stringProp name="Argument.name">lrsStatementsPath</stringProp>
+                <stringProp name="Argument.value">statements</stringProp>
+                <stringProp name="Argument.metadata">=</stringProp>
+              </elementProp>
+            </collectionProp>
+          </Arguments>
+          <hashTree/>
           <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Statement Loop Number" enabled="true">
             <stringProp name="maximumValue">${statementMax}</stringProp>
             <stringProp name="minimumValue">${statementMin}</stringProp>
             <stringProp name="outputFormat"></stringProp>
-            <boolProp name="perThread">false</boolProp>
+            <boolProp name="perThread">true</boolProp>
             <stringProp name="randomSeed"></stringProp>
             <stringProp name="variableName">statementPostNum</stringProp>
           </RandomVariableConfig>
@@ -216,7 +340,7 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
               </collectionProp>
             </HeaderManager>
             <hashTree/>
-            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Single Statement" enabled="true">
+            <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="POST Single Statement without ID" enabled="true">
               <boolProp name="HTTPSampler.postBodyRaw">true</boolProp>
               <elementProp name="HTTPsampler.Arguments" elementType="Arguments">
                 <collectionProp name="Arguments.arguments">
@@ -235,28 +359,16 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
         }&#xd;
     },&#xd;
     &quot;object&quot;: {&#xd;
-        &quot;id&quot;: &quot;http://unicon.net/activities/${OBJECT}/AZ1&quot;,&#xd;
+        &quot;id&quot;: &quot;http://unicon.net/activities/${OBJECT}&quot;,&#xd;
         &quot;objectType&quot;: &quot;Activity&quot;,&#xd;
         &quot;definition&quot;: {&#xd;
             &quot;name&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;${OBJECT} AZ1&quot;&#xd;
+                &quot;en-US&quot;: &quot;${OBJECT}&quot;&#xd;
             },&#xd;
             &quot;description&quot;: {&#xd;
-                &quot;en-US&quot;: &quot;${OBJECT} AZ1&quot;&#xd;
+                &quot;en-US&quot;: &quot;${OBJECT}&quot;&#xd;
             }&#xd;
         }&#xd;
-    },&#xd;
-    &quot;context&quot;: {&#xd;
-        &quot;instructor&quot;: {&#xd;
-            &quot;objectType&quot;: &quot;Agent&quot;,&#xd;
-            &quot;mbox&quot;: &quot;mailto:azeckoski@unicon.net&quot;&#xd;
-        },&#xd;
-        &quot;contextActivities&quot;: {&#xd;
-            &quot;grouping&quot;: {&#xd;
-                &quot;id&quot;: &quot;http://unicon.net/context/${CONTEXT}&quot;&#xd;
-            }&#xd;
-        },&#xd;
-        &quot;registration&quot;: &quot;${GUID}&quot;&#xd;
     }&#xd;
 }</stringProp>
                     <stringProp name="Argument.metadata">=</stringProp>
@@ -283,30 +395,38 @@ vars.put(&quot;authHash&quot;, authHash);</stringProp>
                 <intProp name="OnError.action">3</intProp>
               </ResultAction>
               <hashTree/>
+              <BSFPostProcessor guiclass="TestBeanGUI" testclass="BSFPostProcessor" testname="Set POSTed Statement ID" enabled="true">
+                <stringProp name="filename"></stringProp>
+                <stringProp name="parameters"></stringProp>
+                <stringProp name="script">eval(&apos;var jsonResponse = &apos; + prev.getResponseDataAsString());
+vars.put(&quot;postedStatementId&quot;, jsonResponse[0]);</stringProp>
+                <stringProp name="scriptLanguage">javascript</stringProp>
+              </BSFPostProcessor>
+              <hashTree/>
             </hashTree>
-            <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Run Query Variable" enabled="true">
-              <stringProp name="variableName">runQuery</stringProp>
+            <RandomVariableConfig guiclass="TestBeanGUI" testclass="RandomVariableConfig" testname="Random Run GET Statement" enabled="true">
+              <stringProp name="variableName">runGetStatement</stringProp>
               <stringProp name="outputFormat"></stringProp>
               <stringProp name="minimumValue">1</stringProp>
-              <stringProp name="maximumValue">${queryMaxRand}</stringProp>
+              <stringProp name="maximumValue">${getStatementMaxRand}</stringProp>
               <stringProp name="randomSeed"></stringProp>
               <boolProp name="perThread">true</boolProp>
             </RandomVariableConfig>
             <hashTree/>
-            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="Get Statements Controller" enabled="true">
-              <stringProp name="IfController.condition">${runQuery} == 1</stringProp>
+            <IfController guiclass="IfControllerPanel" testclass="IfController" testname="GET Statement for ID" enabled="true">
+              <stringProp name="IfController.condition">${runGetStatement} == 1</stringProp>
               <boolProp name="IfController.evaluateAll">false</boolProp>
             </IfController>
             <hashTree>
               <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Statement Query" enabled="true">
                 <elementProp name="HTTPsampler.Arguments" elementType="Arguments" guiclass="HTTPArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
                   <collectionProp name="Arguments.arguments">
-                    <elementProp name="limit" elementType="HTTPArgument">
-                      <boolProp name="HTTPArgument.always_encode">false</boolProp>
-                      <stringProp name="Argument.value">10</stringProp>
+                    <elementProp name="statementId" elementType="HTTPArgument">
+                      <boolProp name="HTTPArgument.always_encode">true</boolProp>
+                      <stringProp name="Argument.value">${postedStatementId}</stringProp>
                       <stringProp name="Argument.metadata">=</stringProp>
                       <boolProp name="HTTPArgument.use_equals">true</boolProp>
-                      <stringProp name="Argument.name">limit</stringProp>
+                      <stringProp name="Argument.name">statementId</stringProp>
                     </elementProp>
                   </collectionProp>
                 </elementProp>
